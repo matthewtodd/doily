@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IDENTIFIER STRING_LITERAL INTEGER_LITERAL OPERATOR
+  token FUNCTION IF IDENTIFIER STRING_LITERAL INTEGER_LITERAL OPERATOR
 
 rule
   target
@@ -26,6 +26,7 @@ rule
   expression
     : reference
     | binary_expression
+    | if_statement
     ;
 
   reference
@@ -46,6 +47,10 @@ rule
     : reference OPERATOR reference { result = Call.new(Access.new(val[0], val[1]), [val[2]]) }
     ;
 
+  if_statement
+    : IF '(' expression ')' '{' expression_list '}' { result = Conditional.new(val[2], val[5]) }
+    ;
+
 ---- header ----
 require 'strscan'
 ---- inner ----
@@ -64,6 +69,8 @@ require 'strscan'
 				# ignore space
       when m = scanner.scan(/function/)
         @tokens.push [:FUNCTION, m]
+      when m = scanner.scan(/if/)
+        @tokens.push [:IF, m]
       when m = scanner.scan(/[(){},\.]/)
         @tokens.push [m, m]
       when m = scanner.scan(/==|</)

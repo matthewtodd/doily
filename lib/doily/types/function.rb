@@ -1,23 +1,28 @@
 module Doily
   class Function
-    def initialize(argument_names, expressions)
-      @argument_names = argument_names
-      @expressions    = expressions
+    def initialize(parameters, expressions)
+      @parameters = parameters
+      @block      = Block.new(expressions)
     end
 
-    def bind(external_binding)
-      @external_binding = external_binding
-      self
+    def bind(binding)
+      BoundFunction.new(@parameters, @block, binding)
     end
 
-    def call(*arguments)
-      local_binding = ArgumentBinding.new(@argument_names, arguments, @external_binding)
+    def call(*args)
+      bind(nil).call(*args)
+    end
 
-      result = nil
-      @expressions.each do |expression|
-        result = expression.to_ruby(local_binding)
+    class BoundFunction
+      def initialize(parameters, block, binding)
+        @parameters = parameters
+        @block      = block
+        @binding    = binding
       end
-      result
+
+      def call(*args)
+        @block.to_ruby(ArgumentBinding.new(@parameters, args, @binding))
+      end
     end
   end
 end
