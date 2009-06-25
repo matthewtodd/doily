@@ -1,4 +1,5 @@
 module Doily
+  # TODO this could delegate to / use / return a more generic Binding
   class ArgumentBinding
     def initialize(names, values, parent)
       raise ArgumentError.new(names, values) unless names.length == values.length

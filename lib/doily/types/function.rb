@@ -13,6 +13,10 @@ module Doily
       bind(nil).call(*args)
     end
 
+    def delegate(delegate)
+      bind(DelegateBinding.new(delegate))
+    end
+
     class BoundFunction
       def initialize(parameters, block, binding)
         @parameters = parameters

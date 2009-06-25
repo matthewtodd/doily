@@ -13,27 +13,27 @@ class DoilyTest < Test::Unit::TestCase
     end
 
     should 'handle calling a function' do
-      Doily('function() { echo() }', @delegate).call.should == []
+      Doily('function() { echo() }').delegate(@delegate).call.should == []
     end
 
     should 'handle calling a function with one literal argument' do
-      Doily('function() { echo("foo") }', @delegate).call.should == ['foo']
+      Doily('function() { echo("foo") }').delegate(@delegate).call.should == ['foo']
     end
 
     should 'handle calling a function with many literal arguments' do
-      Doily('function() { echo("foo", 42) }', @delegate).call.should == ['foo', 42]
+      Doily('function() { echo("foo", 42) }').delegate(@delegate).call.should == ['foo', 42]
     end
 
     should 'handle calling a function with a value from the binding' do
-      Doily('function(document) { echo(document) }', @delegate).call('key' => 'value').should == [{'key' => 'value'}]
+      Doily('function(document) { echo(document) }').delegate(@delegate).call('key' => 'value').should == [{'key' => 'value'}]
     end
 
     should 'handle calling a function with a property access on a variable in the binding' do
-      Doily('function(document) { echo(document.key) }', @delegate).call('key' => 'value').should == ['value']
+      Doily('function(document) { echo(document.key) }').delegate(@delegate).call('key' => 'value').should == ['value']
     end
 
     should 'handle calling a function with an invocation on a variable in the binding' do
-      Doily('function(document) { echo(document.keys()) }', @delegate).call('key' => 'value').should == [['key']]
+      Doily('function(document) { echo(document.keys()) }').delegate(@delegate).call('key' => 'value').should == [['key']]
     end
   end
 
