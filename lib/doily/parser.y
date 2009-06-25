@@ -38,10 +38,12 @@ rule
     ;
 
 ---- header ----
-
-  require 'strscan'
-
+require 'strscan'
 ---- inner ----
+
+  def self.function(string)
+    new.parse(string)
+  end
 
   def parse(string)
     @tokens = []
@@ -73,5 +75,3 @@ rule
   def next_token
     @tokens.shift
   end
-
----- footer ----
