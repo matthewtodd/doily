@@ -5,7 +5,9 @@ class DoilyTest < Test::Unit::TestCase
     Doily.function('function() {}').call.should == nil
   end
 
-  should_eventually 'handle a no-arg function returning an integer' do
-    Doily.function('function() { return 1 }').call.should == 1
+  should_eventually 'handle a no-arg function calling another' do
+    binding = mock
+    binding.expects(:foo)
+    Doily.function('function() { foo() }').call
   end
 end

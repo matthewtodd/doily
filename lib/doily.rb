@@ -1,5 +1,7 @@
-class Doily
+require 'doily/parser'
+
+module Doily
   def self.function(string)
-    lambda {}
+    Parser.new.parse(string)
   end
 end
