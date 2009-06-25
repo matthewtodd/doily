@@ -64,4 +64,12 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle a negative if statement' do
     Doily('function() { if (1 == 2) { 42 } }').call.should == nil
   end
+
+  should 'handle variable declaration' do
+    Doily('function() { var foo = "42" }').call.should == '42'
+  end
+
+  should 'handle variable declaration with continuing statements' do
+    Doily('function() { var foo = "42"; foo.length() }').call.should == 2
+  end
 end

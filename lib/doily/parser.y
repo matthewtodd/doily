@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IF IDENTIFIER STRING_LITERAL INTEGER_LITERAL OPERATOR
+  token FUNCTION IF VAR IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
 
 rule
   target
@@ -17,16 +17,17 @@ rule
     | IDENTIFIER ',' argument_name_list { result = [val[0]] + val[2] }
     ;
 
-  # TODO handle multiple expressions, separated by semicolon
   expression_list
-    :            { result = [] }
-    | expression { result = [val[0]] }
+    :                                { result = [] }
+    | expression                     { result = [val[0]] }
+    | expression ';' expression_list { result = [val[0]] + val[2] }
     ;
 
   expression
     : reference
+    | assignment_expression
     | binary_expression
-    | if_statement
+    | if_expression
     ;
 
   reference
@@ -43,11 +44,15 @@ rule
     | expression ',' argument_list { result = [val[0]] + val[2] }
     ;
 
-  binary_expression
-    : reference OPERATOR reference { result = Call.new(Access.new(val[0], val[1]), [val[2]]) }
+  assignment_expression
+    : VAR IDENTIFIER '=' reference { result = Assignment.new(val[1], val[3]) }
     ;
 
-  if_statement
+  binary_expression
+    : reference BINARY_OPERATOR reference { result = Call.new(Access.new(val[0], val[1]), [val[2]]) }
+    ;
+
+  if_expression
     : IF '(' expression ')' '{' expression_list '}' { result = Conditional.new(val[2], val[5]) }
     ;
 
@@ -71,10 +76,12 @@ require 'strscan'
         @tokens.push [:FUNCTION, m]
       when m = scanner.scan(/if/)
         @tokens.push [:IF, m]
-      when m = scanner.scan(/[(){},\.]/)
-        @tokens.push [m, m]
+      when m = scanner.scan(/var/)
+        @tokens.push [:VAR, m]
       when m = scanner.scan(/==|</)
-        @tokens.push [:OPERATOR, m]
+        @tokens.push [:BINARY_OPERATOR, m]
+      when m = scanner.scan(/[(){},\.;=]/)
+        @tokens.push [m, m]
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
       when m = scanner.scan(/"([^"])*"/)

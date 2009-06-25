@@ -25,7 +25,7 @@ module Doily
       end
 
       def call(*args)
-        @block.to_ruby(ArgumentBinding.new(@parameters, args, @binding))
+        @block.to_ruby(ArgumentBinding.new(@binding, @parameters, args))
       end
     end
   end

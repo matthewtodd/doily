@@ -5,7 +5,8 @@ module Doily
     end
 
     def to_ruby(binding)
-      # TODO will want a local binding here
+      binding = LocalBinding.new(binding)
+
       result = nil
       @expressions.each do |expression|
         result = expression.to_ruby(binding)
