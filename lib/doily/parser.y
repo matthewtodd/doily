@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IDENTIFIER
+  token FUNCTION IDENTIFIER STRING_LITERAL
 
 rule
   target
@@ -11,17 +11,29 @@ rule
     : FUNCTION '(' ')' '{' expression_list '}' { result = Function.new(val[4]) }
     ;
 
+  # TODO handle multiple expressions, separated by semicolon
   expression_list
     :            { result = [] }
     | expression { result = [val[0]] }
     ;
 
   expression
-    : function_call
+    : literal
+    | function_call
+    ;
+
+  literal
+    : STRING_LITERAL { result = eval(val[0]) } # CLEVER: eval turns '"foo"' into "foo"
     ;
 
   function_call
-    : IDENTIFIER '(' ')' { result = FunctionCall.new(val[0]) }
+    : IDENTIFIER '(' argument_list ')' { result = FunctionCall.new(val[0], val[2]) }
+    ;
+
+  # TODO handle multiple arguments, separated by comma
+  argument_list
+    :            { result = [] }
+    | expression { result = [val[0]] }
     ;
 
 ---- header ----
@@ -50,6 +62,8 @@ rule
         @tokens.push ['}', m]
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
+      when m = scanner.scan(/"([^"])*"/)
+        @tokens.push [:STRING_LITERAL, m]
       else
         raise ParseError.new(scanner)
       end
