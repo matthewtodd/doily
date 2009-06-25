@@ -72,4 +72,8 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle variable declaration with continuing statements' do
     Doily('function() { var foo = "42"; foo.length() }').call.should == 2
   end
+
+  should 'handle hash literals' do
+    Doily('function() { {"name":"Bob", "age":42 } }').call.should == { 'name' => 'Bob', 'age' => 42 }
+  end
 end
