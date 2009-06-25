@@ -76,4 +76,8 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle hash literals' do
     Doily('function() { {"name":"Bob", "age":42 } }').call.should == { 'name' => 'Bob', 'age' => 42 }
   end
+
+  should 'handle square-bracket hash access' do
+    Doily('function(document) { document["key"] }').call('key' => 'value').should == 'value'
+  end
 end

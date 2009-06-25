@@ -31,12 +31,13 @@ rule
     ;
 
   reference
-    : IDENTIFIER                      { result = Reference.new(val[0]) }
-    | INTEGER_LITERAL                 { result = Literal.new(val[0].to_i) }
+    : IDENTIFIER                       { result = Reference.new(val[0]) }
+    | INTEGER_LITERAL                  { result = Literal.new(val[0].to_i) }
     | string_literal
-    | '{' key_value_list '}'          { result = Object.new(val[1]) }
-    | reference '.' IDENTIFIER        { result = Access.new(val[0], val[2]) }
-    | reference '(' argument_list ')' { result = Call.new(val[0], val[2]) }
+    | '{' key_value_list '}'           { result = Object.new(val[1]) }
+    | reference '.' IDENTIFIER         { result = Access.new(val[0], val[2]) }
+    | reference '[' STRING_LITERAL ']' { result = Access.new(val[0], eval(val[2])) }
+    | reference '(' argument_list ')'  { result = Call.new(val[0], val[2]) }
     ;
 
   string_literal
@@ -95,7 +96,7 @@ require 'strscan'
         @tokens.push [:VAR, m]
       when m = scanner.scan(/==|</)
         @tokens.push [:BINARY_OPERATOR, m]
-      when m = scanner.scan(/[(){},\.:;=]/)
+      when m = scanner.scan(/[(){}\[\],\.:;=]/)
         @tokens.push [m, m]
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
