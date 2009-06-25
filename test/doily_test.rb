@@ -80,4 +80,8 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle square-bracket hash access' do
     Doily('function(document) { document["key"] }').call('key' => 'value').should == 'value'
   end
+
+  should 'handle hash assignment' do
+    Doily('function() { var doc = {}; doc["key"] = "value"; doc }').call.should == { 'key' => 'value' }
+  end
 end

@@ -1,12 +1,12 @@
 module Doily
   class Assignment
-    def initialize(name, reference)
-      @name      = name
+    def initialize(target, reference)
+      @target    = target
       @reference = reference
     end
 
     def to_ruby(binding)
-      binding.store(@name, @reference.to_ruby(binding))
+      @target.assign(@reference, binding)
     end
   end
 end

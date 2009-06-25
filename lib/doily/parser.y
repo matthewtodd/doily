@@ -25,7 +25,8 @@ rule
 
   expression
     : reference
-    | assignment_expression
+    | declaration
+    | assignment
     | binary_expression
     | if_expression
     ;
@@ -60,8 +61,12 @@ rule
     | expression ',' argument_list { result = [val[0]] + val[2] }
     ;
 
-  assignment_expression
-    : VAR IDENTIFIER '=' reference { result = Assignment.new(val[1], val[3]) }
+  assignment
+    : expression '=' reference { result = Assignment.new(val[0], val[2]) }
+    ;
+
+  declaration
+    : VAR IDENTIFIER { result = Declaration.new(val[1]) }
     ;
 
   binary_expression
