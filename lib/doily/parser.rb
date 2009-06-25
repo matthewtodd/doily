@@ -15,7 +15,7 @@ module Doily
 
   class Parser < Racc::Parser
 
-module_eval <<'..end lib/doily/parser.y modeval..idedc04e459f', 'lib/doily/parser.y', 32
+module_eval <<'..end lib/doily/parser.y modeval..idaa5ce06162', 'lib/doily/parser.y', 32
 
   def parse(string)
     @tokens = []
@@ -50,7 +50,7 @@ module_eval <<'..end lib/doily/parser.y modeval..idedc04e459f', 'lib/doily/parse
     @tokens.shift
   end
 
-..end lib/doily/parser.y modeval..idedc04e459f
+..end lib/doily/parser.y modeval..idaa5ce06162
 
 ##### racc 1.4.5 generates ###
 
@@ -58,10 +58,10 @@ racc_reduce_table = [
  0, 0, :racc_error,
  1, 9, :_reduce_none,
  6, 10, :_reduce_2,
- 0, 11, :_reduce_none,
- 1, 11, :_reduce_none,
+ 0, 11, :_reduce_3,
+ 1, 11, :_reduce_4,
  1, 12, :_reduce_none,
- 3, 13, :_reduce_none ]
+ 3, 13, :_reduce_6 ]
 
 racc_reduce_n = 7
 
@@ -137,7 +137,7 @@ Racc_token_to_s_table = [
 'function_definition',
 'statement_list',
 'statement',
-'function_call']
+'call_statement']
 
 Racc_debug_parser = false
 
@@ -149,18 +149,33 @@ Racc_debug_parser = false
 
 module_eval <<'.,.,', 'lib/doily/parser.y', 10
   def _reduce_2( val, _values, result )
- result = lambda {}
+ result = Function.new(val[4])
    result
   end
 .,.,
 
- # reduce 3 omitted
+module_eval <<'.,.,', 'lib/doily/parser.y', 14
+  def _reduce_3( val, _values, result )
+ result = []
+   result
+  end
+.,.,
 
- # reduce 4 omitted
+module_eval <<'.,.,', 'lib/doily/parser.y', 15
+  def _reduce_4( val, _values, result )
+ result = [val[0]]
+   result
+  end
+.,.,
 
  # reduce 5 omitted
 
- # reduce 6 omitted
+module_eval <<'.,.,', 'lib/doily/parser.y', 23
+  def _reduce_6( val, _values, result )
+ result = Call.new(val[0])
+   result
+  end
+.,.,
 
  def _reduce_none( val, _values, result )
   result

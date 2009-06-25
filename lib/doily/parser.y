@@ -8,20 +8,20 @@ rule
     ;
 
   function_definition
-    : FUNCTION '(' ')' '{' statement_list '}' { result = lambda {} }
+    : FUNCTION '(' ')' '{' statement_list '}' { result = Function.new(val[4]) }
     ;
 
   statement_list
-    :
-    | statement
+    :           { result = [] }
+    | statement { result = [val[0]] }
     ;
 
   statement
-    : function_call
+    : call_statement
     ;
 
-  function_call
-    : IDENTIFIER '(' ')'
+  call_statement
+    : IDENTIFIER '(' ')' { result = Call.new(val[0]) }
     ;
 
 ---- header ----
