@@ -19,12 +19,17 @@ rule
 
   expression
     : literal
+    | variable
     | function_call
     ;
 
   literal
-    : STRING_LITERAL
-    | INTEGER_LITERAL
+    : STRING_LITERAL  { result = StringLiteral.new(val[0]) }
+    | INTEGER_LITERAL { result = IntegerLiteral.new(val[0]) }
+    ;
+
+  variable
+    : IDENTIFIER { result = Variable.new(val[0]) }
     ;
 
   function_call
@@ -60,9 +65,9 @@ require 'strscan'
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
       when m = scanner.scan(/"([^"])*"/)
-        @tokens.push [:STRING_LITERAL, eval(m)] # CLEVER: eval turns '"foo"' into "foo"
+        @tokens.push [:STRING_LITERAL, m]
       when m = scanner.scan(/\d+/)
-        @tokens.push [:INTEGER_LITERAL, m.to_i]
+        @tokens.push [:INTEGER_LITERAL, m]
       else
         raise ParseError.new(scanner)
       end

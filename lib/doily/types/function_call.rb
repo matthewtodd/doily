@@ -6,7 +6,7 @@ module Doily
     end
 
     def evaluate(binding)
-      binding.send(@name, *@args)
+      binding.send(@name, *@args.map { |arg| arg.evaluate(binding) })
     end
   end
 end

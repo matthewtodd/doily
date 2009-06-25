@@ -1,7 +1,6 @@
 require 'doily/errors'
-require 'doily/function'
-require 'doily/function_call'
 require 'doily/parser'
+require 'doily/types'
 
 def Doily(string, binding=nil)
   Doily::Parser.function(string).bind(binding)
