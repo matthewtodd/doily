@@ -1,7 +1,8 @@
 module Doily
   class Function
-    def initialize(expressions)
-      @expressions = expressions
+    def initialize(argument_names, expressions)
+      @argument_names = argument_names
+      @expressions    = expressions
     end
 
     def bind(binding)
@@ -9,10 +10,12 @@ module Doily
       self
     end
 
-    def call
+    def call(*arguments)
+      local_binding = ArgumentBinding.new(@argument_names, arguments, @binding)
+
       result = nil
       @expressions.each do |expression|
-        result = expression.evaluate(@binding)
+        result = expression.to_ruby(local_binding)
       end
       result
     end

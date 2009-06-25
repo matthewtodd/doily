@@ -1,11 +1,11 @@
 module Doily
-  class IntegerLiteral
+  class Literal
     def initialize(value)
       @value = value
     end
 
-    def evaluate(binding)
-      @value.to_i
+    def to_ruby(binding)
+      @value
     end
   end
 end

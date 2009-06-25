@@ -1,11 +1,11 @@
 module Doily
-  class Variable
+  class Reference
     def initialize(name)
       @name = name
     end
 
-    def evaluate(binding)
-      binding.send(@name)
+    def to_ruby(binding)
+      binding.fetch(@name)
     end
   end
 end

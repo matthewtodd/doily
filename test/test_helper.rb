@@ -5,9 +5,6 @@ gem 'thoughtbot-shoulda'
 require 'shoulda'
 gem 'jeremymcanally-matchy'
 require 'matchy'
-# TODO should I try out a different mocking library, like rr?
-gem 'mocha'
-require 'mocha'
 
 if $stdin.tty?
   begin

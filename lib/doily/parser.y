@@ -8,7 +8,13 @@ rule
     ;
 
   function_definition
-    : FUNCTION '(' ')' '{' expression_list '}' { result = Function.new(val[4]) }
+    : FUNCTION '(' argument_name_list ')' '{' expression_list '}' { result = Function.new(val[2], val[5]) }
+    ;
+
+  argument_name_list
+    :                                   { result = [] }
+    | IDENTIFIER                        { result = [val[0]] }
+    | IDENTIFIER ',' argument_name_list { result = [val[0]] + val[2] }
     ;
 
   # TODO handle multiple expressions, separated by semicolon
@@ -18,26 +24,23 @@ rule
     ;
 
   expression
-    : atom
-    | property_access
+    : literal
+    | reference
     | function_call
     ;
 
-  atom
-    : STRING_LITERAL  { result = StringLiteral.new(val[0]) }
-    | INTEGER_LITERAL { result = IntegerLiteral.new(val[0]) }
-    | IDENTIFIER      { result = Variable.new(val[0]) }
+  literal
+    : STRING_LITERAL  { result = Literal.new(eval(val[0])) }
+    | INTEGER_LITERAL { result = Literal.new(val[0].to_i) }
+    ;
+  
+  reference
+    : IDENTIFIER               { result = Reference.new(val[0]) }
+    | reference '.' IDENTIFIER { result = Access.new(val[0], val[2]) }
     ;
 
-  property_access
-    : atom '.' IDENTIFIER { result = PropertyAccess.new(val[0], val[2]) }
-    ;
-
-  # I think function calls need another level of indirection:
-  # first, look up the method in the binding, then call it with the parens
-  # so: binding.get(name).call(args) instead of binding.send(name, *args)
   function_call
-    : IDENTIFIER '(' argument_list ')' { result = FunctionCall.new(val[0], val[2]) }
+    : reference '(' argument_list ')' { result = Call.new(val[0], val[2]) }
     ;
 
   argument_list

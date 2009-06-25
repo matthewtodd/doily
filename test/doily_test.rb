@@ -1,42 +1,41 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 class DoilyTest < Test::Unit::TestCase
-  context 'with a mock binding' do
-    setup do
-      @binding = mock
-    end
+  should 'handle nothing' do
+    Doily('function() {}').call.should == nil
+  end
 
-    should 'handle nothing' do
-      Doily('function() {}').call.should == nil
+  context 'delegation to a ruby object' do
+    setup do
+      @delegate = Class.new do
+        def echo(*args)
+          args
+        end
+      end.new
     end
 
     should 'handle calling a function' do
-      @binding.expects(:foo)
-      Doily('function() { foo() }', @binding).call
+      Doily('function() { echo() }', @delegate).call.should == []
     end
 
     should 'handle calling a function with one literal argument' do
-      @binding.expects(:foo).with('bar')
-      Doily('function() { foo("bar") }', @binding).call
+      Doily('function() { echo("foo") }', @delegate).call.should == ['foo']
     end
 
     should 'handle calling a function with many literal arguments' do
-      @binding.expects(:foo).with('bar', 42)
-      Doily('function() { foo("bar", 42) }', @binding).call
+      Doily('function() { echo("foo", 42) }', @delegate).call.should == ['foo', 42]
     end
 
     should 'handle calling a function with a value from the binding' do
-      @binding.expects(:bar).returns(42)
-      @binding.expects(:foo).with(42)
-      Doily('function() { foo(bar) }', @binding).call
+      Doily('function(document) { echo(document) }', @delegate).call('key' => 'value').should == [{'key' => 'value'}]
     end
 
-    should 'handle calling a function with a property lookup on a variable in the binding' do
-      bar = mock
-      bar.expects(:quux).returns(42)
-      @binding.expects(:bar).returns(bar)
-      @binding.expects(:foo).with(42)
-      Doily('function() { foo(bar.quux) }', @binding).call
+    should 'handle calling a function with a property access on a variable in the binding' do
+      Doily('function(document) { echo(document.key) }', @delegate).call('key' => 'value').should == ['value']
+    end
+
+    should 'handle calling a function with an invocation on a variable in the binding' do
+      Doily('function(document) { echo(document.keys()) }', @delegate).call('key' => 'value').should == [['key']]
     end
   end
 end
