@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IF VAR IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
+  token FUNCTION IF ELSE VAR IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
 
 rule
   target
@@ -74,7 +74,8 @@ rule
     ;
 
   if_expression
-    : IF '(' expression ')' '{' expression_list '}' { result = Conditional.new(val[2], val[5]) }
+    : IF '(' expression ')' '{' expression_list '}'                              { result = Conditional.new(val[2], val[5]) }
+    | IF '(' expression ')' '{' expression_list '}' ELSE '{' expression_list '}' { result = Conditional.new(val[2], val[5], val[9]) }
     ;
 
 ---- header ----
@@ -97,6 +98,8 @@ require 'strscan'
         @tokens.push [:FUNCTION, m]
       when m = scanner.scan(/if/)
         @tokens.push [:IF, m]
+      when m = scanner.scan(/else/)
+        @tokens.push [:ELSE, m]
       when m = scanner.scan(/var/)
         @tokens.push [:VAR, m]
       when m = scanner.scan(/==|</)

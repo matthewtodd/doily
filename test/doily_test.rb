@@ -65,6 +65,10 @@ class DoilyTest < Test::Unit::TestCase
     Doily('function() { if (1 == 2) { 42 } }').call.should == nil
   end
 
+  should 'handle an else statement' do
+    Doily('function() { if (1 == 2) { 42 } else { "foo" } }').call.should == 'foo'
+  end
+
   should 'handle variable declaration' do
     Doily('function() { var foo = "42" }').call.should == '42'
   end
