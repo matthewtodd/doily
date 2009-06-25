@@ -18,20 +18,24 @@ rule
     ;
 
   expression
-    : literal
-    | variable
+    : atom
+    | property_access
     | function_call
     ;
 
-  literal
+  atom
     : STRING_LITERAL  { result = StringLiteral.new(val[0]) }
     | INTEGER_LITERAL { result = IntegerLiteral.new(val[0]) }
+    | IDENTIFIER      { result = Variable.new(val[0]) }
     ;
 
-  variable
-    : IDENTIFIER { result = Variable.new(val[0]) }
+  property_access
+    : atom '.' IDENTIFIER { result = PropertyAccess.new(val[0], val[2]) }
     ;
 
+  # I think function calls need another level of indirection:
+  # first, look up the method in the binding, then call it with the parens
+  # so: binding.get(name).call(args) instead of binding.send(name, *args)
   function_call
     : IDENTIFIER '(' argument_list ')' { result = FunctionCall.new(val[0], val[2]) }
     ;
@@ -60,7 +64,7 @@ require 'strscan'
 				# ignore space
       when m = scanner.scan(/function/)
         @tokens.push [:FUNCTION, m]
-      when m = scanner.scan(/[(){},]/)
+      when m = scanner.scan(/[(){},\.]/)
         @tokens.push [m, m]
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
