@@ -1,14 +1,27 @@
 class Doily::Parser
 
-  token FUNCTION
+  token FUNCTION IDENTIFIER
 
 rule
   target
-    : function
+    : function_definition
     ;
-    
-  function
-    : FUNCTION '(' ')' '{' '}' { result = lambda {} }
+
+  function_definition
+    : FUNCTION '(' ')' '{' statement_list '}' { result = lambda {} }
+    ;
+
+  statement_list
+    :
+    | statement
+    ;
+
+  statement
+    : function_call
+    ;
+
+  function_call
+    : IDENTIFIER '(' ')'
     ;
 
 ---- header ----
@@ -23,18 +36,22 @@ rule
 
     until scanner.empty?
       case
-				when scanner.scan(/\s+/)
-					# ignore space
-        when m = scanner.scan(/function/)
-          @tokens.push [:FUNCTION, m]
-        when m = scanner.scan(/\(/)
-          @tokens.push ['(', m]
-        when m = scanner.scan(/\)/)
-          @tokens.push [')', m]
-        when m = scanner.scan(/\{/)
-          @tokens.push ['{', m]
-        when m = scanner.scan(/\}/)
-          @tokens.push ['}', m]
+			when scanner.scan(/\s+/)
+				# ignore space
+      when m = scanner.scan(/function/)
+        @tokens.push [:FUNCTION, m]
+      when m = scanner.scan(/\(/)
+        @tokens.push ['(', m]
+      when m = scanner.scan(/\)/)
+        @tokens.push [')', m]
+      when m = scanner.scan(/\{/)
+        @tokens.push ['{', m]
+      when m = scanner.scan(/\}/)
+        @tokens.push ['}', m]
+      when m = scanner.scan(/[a-zA-Z]+/)
+        @tokens.push [:IDENTIFIER, m]
+      else
+        raise ParseError.new(scanner)
       end
     end
 

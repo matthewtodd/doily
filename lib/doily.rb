@@ -1,3 +1,4 @@
+require 'doily/errors'
 require 'doily/parser'
 
 module Doily
