@@ -15,7 +15,7 @@ module Doily
 
   class Parser < Racc::Parser
 
-module_eval <<'..end lib/doily/parser.y modeval..idedbcaafedb', 'lib/doily/parser.y', 44
+module_eval <<'..end lib/doily/parser.y modeval..idccc9dbee68', 'lib/doily/parser.y', 45
 
   def parse(string)
     @tokens = []
@@ -27,18 +27,14 @@ module_eval <<'..end lib/doily/parser.y modeval..idedbcaafedb', 'lib/doily/parse
 				# ignore space
       when m = scanner.scan(/function/)
         @tokens.push [:FUNCTION, m]
-      when m = scanner.scan(/\(/)
-        @tokens.push ['(', m]
-      when m = scanner.scan(/\)/)
-        @tokens.push [')', m]
-      when m = scanner.scan(/\{/)
-        @tokens.push ['{', m]
-      when m = scanner.scan(/\}/)
-        @tokens.push ['}', m]
+      when m = scanner.scan(/[(){},]/)
+        @tokens.push [m, m]
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
       when m = scanner.scan(/"([^"])*"/)
-        @tokens.push [:STRING_LITERAL, m]
+        @tokens.push [:STRING_LITERAL, eval(m)] # CLEVER: eval turns '"foo"' into "foo"
+      when m = scanner.scan(/\d+/)
+        @tokens.push [:INTEGER_LITERAL, m.to_i]
       else
         raise ParseError.new(scanner)
       end
@@ -52,54 +48,60 @@ module_eval <<'..end lib/doily/parser.y modeval..idedbcaafedb', 'lib/doily/parse
     @tokens.shift
   end
 
-..end lib/doily/parser.y modeval..idedbcaafedb
+..end lib/doily/parser.y modeval..idccc9dbee68
 
 ##### racc 1.4.5 generates ###
 
 racc_reduce_table = [
  0, 0, :racc_error,
- 1, 10, :_reduce_none,
- 6, 11, :_reduce_2,
- 0, 12, :_reduce_3,
- 1, 12, :_reduce_4,
- 1, 13, :_reduce_none,
- 1, 13, :_reduce_none,
- 1, 14, :_reduce_7,
- 4, 15, :_reduce_8,
- 0, 16, :_reduce_9,
- 1, 16, :_reduce_10 ]
+ 1, 12, :_reduce_none,
+ 6, 13, :_reduce_2,
+ 0, 14, :_reduce_3,
+ 1, 14, :_reduce_4,
+ 1, 15, :_reduce_none,
+ 1, 15, :_reduce_none,
+ 1, 16, :_reduce_none,
+ 1, 16, :_reduce_none,
+ 4, 17, :_reduce_9,
+ 0, 18, :_reduce_10,
+ 1, 18, :_reduce_11,
+ 3, 18, :_reduce_12 ]
 
-racc_reduce_n = 11
+racc_reduce_n = 13
 
-racc_shift_n = 20
+racc_shift_n = 23
 
 racc_action_table = [
-    11,    13,    11,    13,     8,     6,     7,     5,     2,    15,
-    16,     4,    19 ]
+     9,    11,    13,     9,    11,    13,     9,    11,    13,     6,
+     7,     8,     5,    16,    17,     4,    20,    21,     2 ]
 
 racc_action_check = [
-     8,     8,    16,    16,     6,     4,     5,     3,     0,     9,
-    11,     2,    18 ]
+    20,    20,    20,    16,    16,    16,     8,     8,     8,     4,
+     5,     7,     2,     9,    10,     1,    18,    19,     0 ]
 
 racc_action_pointer = [
-     6,   nil,     6,     7,    -1,     6,    -3,   nil,    -3,     1,
-   nil,     5,   nil,   nil,   nil,   nil,    -1,   nil,     6,   nil ]
+    16,    15,     6,   nil,     9,     3,   nil,     3,     3,     7,
+     5,   nil,   nil,   nil,   nil,   nil,     0,   nil,     6,    10,
+    -3,   nil,   nil ]
 
 racc_action_default = [
-   -11,    -1,   -11,   -11,   -11,   -11,   -11,    20,    -3,   -11,
-    -4,   -11,    -5,    -7,    -6,    -2,    -9,   -10,   -11,    -8 ]
+   -13,   -13,   -13,    -1,   -13,   -13,    23,   -13,    -3,   -13,
+   -13,    -7,    -4,    -8,    -5,    -6,   -10,    -2,   -11,   -13,
+    -3,    -9,   -12 ]
 
 racc_goto_table = [
-    10,     9,     1,     3,    18,   nil,   nil,   nil,    17 ]
+    10,     1,     3,    18,    19,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,    22 ]
 
 racc_goto_check = [
-     4,     3,     2,     1,     7,   nil,   nil,   nil,     4 ]
+     3,     1,     2,     4,     7,   nil,   nil,   nil,   nil,   nil,
+   nil,   nil,     3 ]
 
 racc_goto_pointer = [
-   nil,     3,     2,    -7,    -8,   nil,   nil,   -12 ]
+   nil,     1,     2,    -8,   -13,   nil,   nil,   -12 ]
 
 racc_goto_default = [
-   nil,   nil,   nil,   nil,   nil,    12,    14,   nil ]
+   nil,   nil,   nil,   nil,    12,    14,    15,   nil ]
 
 racc_token_table = {
  false => 0,
@@ -107,14 +109,16 @@ racc_token_table = {
  :FUNCTION => 2,
  :IDENTIFIER => 3,
  :STRING_LITERAL => 4,
- "(" => 5,
- ")" => 6,
- "{" => 7,
- "}" => 8 }
+ :INTEGER_LITERAL => 5,
+ "(" => 6,
+ ")" => 7,
+ "{" => 8,
+ "}" => 9,
+ "," => 10 }
 
 racc_use_result_var = true
 
-racc_nt_base = 9
+racc_nt_base = 11
 
 Racc_arg = [
  racc_action_table,
@@ -138,10 +142,12 @@ Racc_token_to_s_table = [
 'FUNCTION',
 'IDENTIFIER',
 'STRING_LITERAL',
+'INTEGER_LITERAL',
 '"("',
 '")"',
 '"{"',
 '"}"',
+'","',
 '$start',
 'target',
 'function_definition',
@@ -184,30 +190,34 @@ module_eval <<'.,.,', 'lib/doily/parser.y', 16
 
  # reduce 6 omitted
 
-module_eval <<'.,.,', 'lib/doily/parser.y', 25
-  def _reduce_7( val, _values, result )
- result = eval(val[0])
-   result
-  end
-.,.,
+ # reduce 7 omitted
 
-module_eval <<'.,.,', 'lib/doily/parser.y', 29
-  def _reduce_8( val, _values, result )
+ # reduce 8 omitted
+
+module_eval <<'.,.,', 'lib/doily/parser.y', 30
+  def _reduce_9( val, _values, result )
  result = FunctionCall.new(val[0], val[2])
    result
   end
 .,.,
 
 module_eval <<'.,.,', 'lib/doily/parser.y', 34
-  def _reduce_9( val, _values, result )
+  def _reduce_10( val, _values, result )
  result = []
    result
   end
 .,.,
 
 module_eval <<'.,.,', 'lib/doily/parser.y', 35
-  def _reduce_10( val, _values, result )
+  def _reduce_11( val, _values, result )
  result = [val[0]]
+   result
+  end
+.,.,
+
+module_eval <<'.,.,', 'lib/doily/parser.y', 36
+  def _reduce_12( val, _values, result )
+ result = [val[0]] + val[2]
    result
   end
 .,.,

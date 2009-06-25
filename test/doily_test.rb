@@ -16,4 +16,10 @@ class DoilyTest < Test::Unit::TestCase
     binding.expects(:foo).with('bar')
     Doily.function('function() { foo("bar") }').bind(binding).call
   end
+
+  should 'handle a no-arg function calling a function with many literal arguments' do
+    binding = mock
+    binding.expects(:foo).with('bar', 42)
+    Doily.function('function() { foo("bar", 42) }').bind(binding).call
+  end
 end

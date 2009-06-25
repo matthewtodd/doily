@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IDENTIFIER STRING_LITERAL
+  token FUNCTION IDENTIFIER STRING_LITERAL INTEGER_LITERAL
 
 rule
   target
@@ -23,17 +23,18 @@ rule
     ;
 
   literal
-    : STRING_LITERAL { result = eval(val[0]) } # CLEVER: eval turns '"foo"' into "foo"
+    : STRING_LITERAL
+    | INTEGER_LITERAL
     ;
 
   function_call
     : IDENTIFIER '(' argument_list ')' { result = FunctionCall.new(val[0], val[2]) }
     ;
 
-  # TODO handle multiple arguments, separated by comma
   argument_list
-    :            { result = [] }
-    | expression { result = [val[0]] }
+    :                                { result = [] }
+    | expression                     { result = [val[0]] }
+    | expression ',' expression_list { result = [val[0]] + val[2] }
     ;
 
 ---- header ----
@@ -52,18 +53,14 @@ rule
 				# ignore space
       when m = scanner.scan(/function/)
         @tokens.push [:FUNCTION, m]
-      when m = scanner.scan(/\(/)
-        @tokens.push ['(', m]
-      when m = scanner.scan(/\)/)
-        @tokens.push [')', m]
-      when m = scanner.scan(/\{/)
-        @tokens.push ['{', m]
-      when m = scanner.scan(/\}/)
-        @tokens.push ['}', m]
+      when m = scanner.scan(/[(){},]/)
+        @tokens.push [m, m]
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
       when m = scanner.scan(/"([^"])*"/)
-        @tokens.push [:STRING_LITERAL, m]
+        @tokens.push [:STRING_LITERAL, eval(m)] # CLEVER: eval turns '"foo"' into "foo"
+      when m = scanner.scan(/\d+/)
+        @tokens.push [:INTEGER_LITERAL, m.to_i]
       else
         raise ParseError.new(scanner)
       end
