@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IDENTIFIER STRING_LITERAL INTEGER_LITERAL
+  token FUNCTION IDENTIFIER STRING_LITERAL INTEGER_LITERAL OPERATOR
 
 rule
   target
@@ -24,29 +24,26 @@ rule
     ;
 
   expression
-    : literal
-    | reference
-    | function_call
+    : reference
+    | binary_expression
     ;
 
-  literal
-    : STRING_LITERAL  { result = Literal.new(eval(val[0])) }
-    | INTEGER_LITERAL { result = Literal.new(val[0].to_i) }
-    ;
-  
   reference
-    : IDENTIFIER               { result = Reference.new(val[0]) }
-    | reference '.' IDENTIFIER { result = Access.new(val[0], val[2]) }
-    ;
-
-  function_call
-    : reference '(' argument_list ')' { result = Call.new(val[0], val[2]) }
+    : IDENTIFIER                      { result = Reference.new(val[0]) }
+    | INTEGER_LITERAL                 { result = Literal.new(val[0].to_i) }
+    | STRING_LITERAL                  { result = Literal.new(eval(val[0])) }
+    | reference '.' IDENTIFIER        { result = Access.new(val[0], val[2]) }
+    | reference '(' argument_list ')' { result = Call.new(val[0], val[2]) }
     ;
 
   argument_list
-    :                                { result = [] }
-    | expression                     { result = [val[0]] }
-    | expression ',' expression_list { result = [val[0]] + val[2] }
+    :                              { result = [] }
+    | expression                   { result = [val[0]] }
+    | expression ',' argument_list { result = [val[0]] + val[2] }
+    ;
+
+  binary_expression
+    : reference OPERATOR reference { result = Call.new(Access.new(val[0], val[1]), [val[2]]) }
     ;
 
 ---- header ----
@@ -69,6 +66,8 @@ require 'strscan'
         @tokens.push [:FUNCTION, m]
       when m = scanner.scan(/[(){},\.]/)
         @tokens.push [m, m]
+      when m = scanner.scan(/==|</)
+        @tokens.push [:OPERATOR, m]
       when m = scanner.scan(/[a-zA-Z]+/)
         @tokens.push [:IDENTIFIER, m]
       when m = scanner.scan(/"([^"])*"/)

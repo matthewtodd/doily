@@ -8,9 +8,7 @@ class DoilyTest < Test::Unit::TestCase
   context 'delegation to a ruby object' do
     setup do
       @delegate = Class.new do
-        def echo(*args)
-          args
-        end
+        def echo(*args); args; end
       end.new
     end
 
@@ -36,6 +34,26 @@ class DoilyTest < Test::Unit::TestCase
 
     should 'handle calling a function with an invocation on a variable in the binding' do
       Doily('function(document) { echo(document.keys()) }', @delegate).call('key' => 'value').should == [['key']]
+    end
+
+    should 'handle a boolean comparison of integers' do
+      Doily('function() { 1 == 1 }').call.should == true
+    end
+
+    should 'handle a boolean comparison of strings' do
+      Doily('function() { "foo" == "foo" }').call.should == true
+    end
+
+    should 'handle a boolean comparison with calls' do
+      Doily('function() { "foo".length() == 3 }').call.should == true
+    end
+
+    should 'handle a false boolean comparison' do
+      Doily('function() { "foo" == "bar" }').call.should == false
+    end
+
+    should 'handle a negative boolean comparison' do
+      Doily('function() { 1 < 2 }').call.should == true
     end
   end
 end

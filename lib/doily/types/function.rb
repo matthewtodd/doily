@@ -5,13 +5,13 @@ module Doily
       @expressions    = expressions
     end
 
-    def bind(binding)
-      @binding = binding
+    def bind(external_binding)
+      @external_binding = external_binding
       self
     end
 
     def call(*arguments)
-      local_binding = ArgumentBinding.new(@argument_names, arguments, @binding)
+      local_binding = ArgumentBinding.new(@argument_names, arguments, @external_binding)
 
       result = nil
       @expressions.each do |expression|
