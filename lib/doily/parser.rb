@@ -15,7 +15,7 @@ module Doily
 
   class Parser < Racc::Parser
 
-module_eval <<'..end lib/doily/parser.y modeval..idaa5ce06162', 'lib/doily/parser.y', 32
+module_eval <<'..end lib/doily/parser.y modeval..id1dfe6d611a', 'lib/doily/parser.y', 32
 
   def parse(string)
     @tokens = []
@@ -50,7 +50,7 @@ module_eval <<'..end lib/doily/parser.y modeval..idaa5ce06162', 'lib/doily/parse
     @tokens.shift
   end
 
-..end lib/doily/parser.y modeval..idaa5ce06162
+..end lib/doily/parser.y modeval..id1dfe6d611a
 
 ##### racc 1.4.5 generates ###
 
@@ -135,9 +135,9 @@ Racc_token_to_s_table = [
 '$start',
 'target',
 'function_definition',
-'statement_list',
-'statement',
-'call_statement']
+'expression_list',
+'expression',
+'function_call']
 
 Racc_debug_parser = false
 
@@ -172,7 +172,7 @@ module_eval <<'.,.,', 'lib/doily/parser.y', 15
 
 module_eval <<'.,.,', 'lib/doily/parser.y', 23
   def _reduce_6( val, _values, result )
- result = Call.new(val[0])
+ result = FunctionCall.new(val[0])
    result
   end
 .,.,

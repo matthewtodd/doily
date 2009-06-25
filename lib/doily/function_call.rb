@@ -1,10 +1,10 @@
 module Doily
-  class Call
+  class FunctionCall
     def initialize(name)
       @name = name
     end
 
-    def execute(binding)
+    def evaluate(binding)
       binding.send(@name)
     end
   end

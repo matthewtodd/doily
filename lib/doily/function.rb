@@ -1,7 +1,7 @@
 module Doily
   class Function
-    def initialize(statements)
-      @statements = statements
+    def initialize(expressions)
+      @expressions = expressions
     end
 
     def bind(binding)
@@ -11,8 +11,8 @@ module Doily
 
     def call
       result = nil
-      @statements.each do |statement|
-        result = statement.execute(@binding)
+      @expressions.each do |expression|
+        result = expression.evaluate(@binding)
       end
       result
     end
