@@ -1,8 +1,23 @@
 Given /^these documents$/ do |table|
+  table.raw[0].each { |column| table.map_column!(column) { |value| eval(value) }}
   @documents = table.hashes
 end
 
-When /^get the '(.+)' view for '(.+)'$/ do |view, klass|
+class SimpleEmitter
+  def initialize
+    @results = []
+  end
+
+  def emit(key, value)
+    @results.push('key' => key, 'value' => value)
+  end
+
+  def results
+    @results
+  end
+end
+
+When /^I get the '(.+)' view for '(.+)'$/ do |view, klass|
   view     = Chef.const_get(klass)::DESIGN_DOCUMENT['views'][view]
   emitter  = SimpleEmitter.new
   function = Doily(view['map']).delegate(emitter)
@@ -10,6 +25,7 @@ When /^get the '(.+)' view for '(.+)'$/ do |view, klass|
   @results = emitter.results
 end
 
-Then /^I should see these results$/ do |table|
+Then /^I should see$/ do |table|
+  table.raw[0].each { |column| table.map_column!(column) { |value| eval(value) }}
   @results.should == table.hashes
 end

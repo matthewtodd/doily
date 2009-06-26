@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IF ELSE VAR IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
+  token FUNCTION IF ELSE VAR BOOLEAN_LITERAL IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
 
 rule
   target
@@ -34,6 +34,7 @@ rule
   reference
     : IDENTIFIER                       { result = Reference.new(val[0]) }
     | INTEGER_LITERAL                  { result = Literal.new(val[0].to_i) }
+    | BOOLEAN_LITERAL                  { result = Literal.new(eval(val[0])) }
     | string_literal
     | '{' key_value_list '}'           { result = Object.new(val[1]) }
     | reference '.' IDENTIFIER         { result = Access.new(val[0], val[2]) }
@@ -102,6 +103,8 @@ require 'strscan'
         @tokens.push [:ELSE, m]
       when m = scanner.scan(/var/)
         @tokens.push [:VAR, m]
+      when m = scanner.scan(/true|false/)
+        @tokens.push [:BOOLEAN_LITERAL, m]
       when m = scanner.scan(/==|</)
         @tokens.push [:BINARY_OPERATOR, m]
       when m = scanner.scan(/[(){}\[\],\.:;=]/)

@@ -88,4 +88,12 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle hash assignment' do
     Doily('function() { var doc = {}; doc["key"] = "value"; doc }').call.should == { 'key' => 'value' }
   end
+
+  should 'handle literal true' do
+    Doily('function() { true }').call.should == true
+  end
+
+  should 'handle literal false' do
+    Doily('function() { false }').call.should == false
+  end
 end
