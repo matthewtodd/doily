@@ -13,7 +13,7 @@ module Doily
 
   class Parser < Racc::Parser
 
-module_eval <<'..end lib/doily/parser.y modeval..id327ec856e3', 'lib/doily/parser.y', 85
+module_eval <<'..end lib/doily/parser.y modeval..idc440ebe2a3', 'lib/doily/parser.y', 85
 
   def self.function(string)
     new.parse(string)
@@ -59,7 +59,7 @@ module_eval <<'..end lib/doily/parser.y modeval..id327ec856e3', 'lib/doily/parse
   def next_token
     @tokens.shift
   end
-..end lib/doily/parser.y modeval..id327ec856e3
+..end lib/doily/parser.y modeval..idc440ebe2a3
 
 ##### racc 1.4.5 generates ###
 

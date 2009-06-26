@@ -5,10 +5,10 @@ Feature: Chef Roles
 
   Background:
     Given these documents
-      | chef_type  | name                 |
-      | 'role'     | 'application server' |
-      | 'role'     | 'database server'    |
-      | 'not_role' | 'glarb'              |
+      | chef_type             | name                 |
+      | 'role'                | 'application server' |
+      | 'role'                | 'database server'    |
+      | 'openid_registration' | 'glarb_example_com'  |
 
   Scenario: Getting all Roles
     When I get the 'all' view for 'Role'
