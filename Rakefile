@@ -1,4 +1,5 @@
 require 'rake/testtask'
+require 'cucumber/rake/task'
 
 rule '.rb' => ['.y'] do |task|
   sh "racc --output-file #{task.name} #{task.source}"
@@ -8,5 +9,8 @@ Rake::TestTask.new do |task|
   task.pattern = 'test/*_test.rb'
 end
 
+Cucumber::Rake::Task.new
+
 task :test => 'lib/doily/parser.rb'
-task :default => :test
+task :features => :test
+task :default => :features

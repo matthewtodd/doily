@@ -106,7 +106,7 @@ require 'strscan'
         @tokens.push [:BINARY_OPERATOR, m]
       when m = scanner.scan(/[(){}\[\],\.:;=]/)
         @tokens.push [m, m]
-      when m = scanner.scan(/[a-zA-Z]+/)
+      when m = scanner.scan(/[a-zA-Z_]+/)
         @tokens.push [:IDENTIFIER, m]
       when m = scanner.scan(/"([^"])*"/)
         @tokens.push [:STRING_LITERAL, m]
