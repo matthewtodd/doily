@@ -24,9 +24,9 @@ Feature: Chef Nodes
       | 'malacandra' | 'malacandra' |
       | 'perelandra' | 'perelandra' |
 
-  Scenario: Getting all Node statuses
-    When I get the 'status' view for 'Node'
-    Then I should see
-      | key          | value                                                                                                                                                                                                                                        |
-      | 'malacandra' | { 'name' => 'malacandra', 'fqdn' => 'malacandra.example.com', 'ipaddress' => 'Undefined', 'ohai_time' => 'Undefined', 'uptime' => 'Undefined', 'platform' => 'Undefined', 'platform_version' => 'Undefined', 'run_list' => ['a', 'b', 'c'] } |
-      | 'perelandra' | { 'name' => 'perelandra', 'fqdn' => 'perelandra.example.com', 'ipaddress' => 'Undefined', 'ohai_time' => 'Undefined', 'uptime' => 'Undefined', 'platform' => 'Undefined', 'platform_version' => 'Undefined', 'run_list' => ['a', 'b'] }      |
+  # Scenario: Getting all Node statuses
+  #   When I get the 'status' view for 'Node'
+  #   Then I should see
+  #     | key          | value                                                                                                                                                                                                                                        |
+  #     | 'malacandra' | { 'name' => 'malacandra', 'fqdn' => 'malacandra.example.com', 'ipaddress' => 'Undefined', 'ohai_time' => 'Undefined', 'uptime' => 'Undefined', 'platform' => 'Undefined', 'platform_version' => 'Undefined', 'run_list' => ['a', 'b', 'c'] } |
+  #     | 'perelandra' | { 'name' => 'perelandra', 'fqdn' => 'perelandra.example.com', 'ipaddress' => 'Undefined', 'ohai_time' => 'Undefined', 'uptime' => 'Undefined', 'platform' => 'Undefined', 'platform_version' => 'Undefined', 'run_list' => ['a', 'b'] }      |

@@ -32,7 +32,7 @@ rule
     | declaration
     | assignment
     | binary_expression
-    | if_expression
+    | if_statement
     ;
 
   reference
@@ -78,7 +78,7 @@ rule
     : reference BINARY_OPERATOR reference { result = Call.new(Access.new(val[0], val[1]), [val[2]]) }
     ;
 
-  if_expression
+  if_statement
     : IF '(' expression ')' block            { result = Conditional.new(val[2], val[4]) }
     | IF '(' expression ')' block ELSE block { result = Conditional.new(val[2], val[4], val[6]) }
     ;
