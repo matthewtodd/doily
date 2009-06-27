@@ -13,7 +13,7 @@ module Doily
 
   class Parser < Racc::Parser
 
-module_eval <<'..end lib/doily/parser.y modeval..idb577f6e565', 'lib/doily/parser.y', 93
+module_eval <<'..end lib/doily/parser.y modeval..id92a3291b97', 'lib/doily/parser.y', 93
 
   def self.function(string)
     new.parse(string)
@@ -45,6 +45,8 @@ module_eval <<'..end lib/doily/parser.y modeval..idb577f6e565', 'lib/doily/parse
         @tokens.push [:IDENTIFIER, m]
       when m = scanner.scan(/"([^"])*"/)
         @tokens.push [:STRING_LITERAL, m]
+      when m = scanner.scan(/'([^'])*'/)
+        @tokens.push [:STRING_LITERAL, m]
       when m = scanner.scan(/\d+/)
         @tokens.push [:INTEGER_LITERAL, m]
       else
@@ -59,7 +61,7 @@ module_eval <<'..end lib/doily/parser.y modeval..idb577f6e565', 'lib/doily/parse
   def next_token
     @tokens.shift
   end
-..end lib/doily/parser.y modeval..idb577f6e565
+..end lib/doily/parser.y modeval..id92a3291b97
 
 ##### racc 1.4.5 generates ###
 

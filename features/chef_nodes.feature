@@ -44,5 +44,3 @@ Feature: Chef Nodes
       | c   | malacandra |
       | a   | perelandra |
       | b   | perelandra |
-
-

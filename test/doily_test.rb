@@ -96,4 +96,8 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle literal false' do
     Doily('function() { false; }').call.should == false
   end
+
+  should 'handle single-quoted strings' do
+    Doily("function() { 'foo'; }").call.should == 'foo'
+  end
 end
