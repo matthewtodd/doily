@@ -11,6 +11,15 @@ Feature: Chef Nodes
       | 'node'                | 'thulucandra'       | { 'fqdn' => 'thulucandra.example.com' } | nil               |
       | 'openid_registration' | 'glarb_example_com' | 'do not matter'                         | 'does not matter' |
 
+  Scenario: Coverage
+    When I list all the views for 'Node'
+    Then I should see
+      | name          |
+      | 'all'         |
+      | 'all_id'      |
+      | 'by_run_list' |
+      | 'status'      |
+
   Scenario: Getting all Nodes
     When I get the 'all' view for 'Node'
     Then I should see

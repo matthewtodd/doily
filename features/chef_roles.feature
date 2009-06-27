@@ -10,6 +10,13 @@ Feature: Chef Roles
       | 'role'                | 'database server'    |
       | 'openid_registration' | 'glarb_example_com'  |
 
+  Scenario: Coverage
+    When I list all the views for 'Role'
+    Then I should see
+      | name          |
+      | 'all'         |
+      | 'all_id'      |
+
   Scenario: Getting all Roles
     When I get the 'all' view for 'Role'
     Then I should see

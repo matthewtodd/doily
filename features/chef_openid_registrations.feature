@@ -10,6 +10,15 @@ Feature: Chef OpenID Registrations
       | 'openid_registration' | 'validated_org'   | true              |
       | 'role'                | 'foo'             | 'does not matter' |
 
+  Scenario: Coverage
+    When I list all the views for 'OpenIDRegistration'
+    Then I should see
+      | name          |
+      | 'all'         |
+      | 'all_id'      |
+      | 'unvalidated' |
+      | 'validated'   |
+
   Scenario: Getting all OpenID Registrations
     When I get the 'all' view for 'OpenIDRegistration'
     Then I should see

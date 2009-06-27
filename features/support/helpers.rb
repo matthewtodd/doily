@@ -14,8 +14,12 @@ class CouchDBView
   end
 end
 
+def chef_view_functions(klass)
+  Chef.const_get(klass)::DESIGN_DOCUMENT.fetch('views')
+end
+
 def chef_view(klass, name)
-  Chef.const_get(klass)::DESIGN_DOCUMENT.fetch('views').fetch(name).fetch('map')
+  chef_view_functions(klass).fetch(name).fetch('map')
 end
 
 def evaluate_table_values(table)
