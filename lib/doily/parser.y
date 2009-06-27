@@ -18,13 +18,23 @@ rule
     ;
 
   block
-    : '{' expression_list '}' { result = Block.new(val[1]) }
+    : '{' '}'                { result = Block.new([]) }
+    | '{' statement_list '}' { result = Block.new(val[1]) }
     ;
 
-  expression_list
-    :                                { result = [] }
-    | expression                     { result = [val[0]] }
-    | expression ';' expression_list { result = [val[0]] + val[2] }
+  statement_list
+    : single_statement                 { result = [val[0]] }
+    | leading_statement statement_list { result = [val[0]] + val[1] }
+    ;
+
+  single_statement
+    : if_statement
+    | expression
+    ;
+
+  leading_statement
+    : if_statement
+    | expression ';'
     ;
 
   expression
@@ -32,7 +42,6 @@ rule
     | declaration
     | assignment
     | binary_expression
-    | if_statement
     ;
 
   reference
