@@ -1,2 +1,30 @@
-* http://github.com/jbarnette/johnson - ruby wrapper for SpiderMonkey
+= Doily
+
+A Javascript (function) interpreter for Ruby.
+
+== Examples
+
+ Doily('function(string) { string.length; }').call('foo') # => 3
+
+ function = Doily('function(doc) { if (doc.type == "node") { emit(doc.name, doc); } }')
+ function = function.delegate(couch_db_view) # assuming couch_db_view responds to :emit
+ documents.each do |document|
+   function.call(document)
+ end
+
+== Install
+
+ gem sources --add http://gems.github.com
+ gem install matthewtodd-doily
+
+Or, if you want to run tests & features:
+
+ gem sources --add http://gems.github.com
+ gem sources --add http://gems.opscode.com
+ gem install matthewtodd-doily --development
+
+== Alternatives (More or Less)
+
+* http://github.com/jbarnette/johnson - Ruby wrapper for SpiderMonkey
 * http://github.com/jcoglan/siren - JSON parser / query language
+* others?
