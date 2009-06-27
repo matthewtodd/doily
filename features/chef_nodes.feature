@@ -38,9 +38,9 @@ Feature: Chef Nodes
   Scenario: Getting Nodes by run list
     When I get the 'by_run_list' view for 'Node'
     Then I should see
-      | key | value      |
-      | a   | malacandra |
-      | b   | malacandra |
-      | c   | malacandra |
-      | a   | perelandra |
-      | b   | perelandra |
+      | key | value        |
+      | 'a' | 'malacandra' |
+      | 'b' | 'malacandra' |
+      | 'c' | 'malacandra' |
+      | 'a' | 'perelandra' |
+      | 'b' | 'perelandra' |

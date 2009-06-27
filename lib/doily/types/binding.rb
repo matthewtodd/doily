@@ -27,7 +27,9 @@ module Doily
   class ArgumentBinding < Binding
     def initialize(parent, names, values)
       raise ArgumentError.new(names, values) unless names.length == values.length
-      super parent, Hash[*names.zip(values).flatten]
+      contents = {}
+      names.zip(values).each { |key, value| contents[key] = value }
+      super parent, contents
     end
   end
 

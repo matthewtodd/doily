@@ -56,8 +56,8 @@ rule
     | BOOLEAN_LITERAL                  { result = Literal.new(eval(val[0])) }
     | string_literal
     | '{' key_value_list '}'           { result = Object.new(val[1]) }
-    | reference '.' IDENTIFIER         { result = Access.new(val[0], val[2]) }
-    | reference '[' STRING_LITERAL ']' { result = Access.new(val[0], eval(val[2])) }
+    | reference '.' IDENTIFIER         { result = Access.new(val[0], Literal.new(val[2])) }
+    | reference '[' reference ']'      { result = Access.new(val[0], val[2]) }
     | reference '(' argument_list ')'  { result = Call.new(val[0], val[2]) }
     ;
 
@@ -94,11 +94,11 @@ rule
     ;
 
   binary_expression
-    : reference BINARY_OPERATOR reference { result = Call.new(Access.new(val[0], val[1]), [val[2]]) }
+    : reference BINARY_OPERATOR reference { result = Call.new(Access.new(val[0], Literal.new(val[1])), [val[2]]) }
     ;
 
   increment
-    : variable '++' { result = Assignment.new(val[0], Call.new(Access.new(val[0], '+'), [Literal.new(1)])) }
+    : variable '++' { result = Assignment.new(val[0], Call.new(Access.new(val[0], Literal.new('+')), [Literal.new(1)])) }
     ;
 
 ---- header ----

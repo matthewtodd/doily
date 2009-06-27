@@ -46,7 +46,7 @@ class DoilyTest < Test::Unit::TestCase
   end
 
   should 'handle a boolean comparison with calls' do
-    Doily('function() { "foo".length() == 3; }').call.should == true
+    Doily('function() { "foo".reverse() == "oof"; }').call.should == true
   end
 
   should 'handle a false boolean comparison' do
@@ -74,15 +74,19 @@ class DoilyTest < Test::Unit::TestCase
   end
 
   should 'handle variable declaration with continuing statements' do
-    Doily('function() { var foo = "42"; foo.length(); }').call.should == 2
+    Doily('function() { var foo = "42"; foo; }').call.should == '42'
   end
 
   should 'handle hash literals' do
     Doily('function() { {"name":"Bob", "age":42 }; }').call.should == { 'name' => 'Bob', 'age' => 42 }
   end
 
-  should 'handle square-bracket hash access' do
+  should 'handle square-bracket hash access with literal' do
     Doily('function(document) { document["key"]; }').call('key' => 'value').should == 'value'
+  end
+
+  should 'handle square-bracket hash access with expression' do
+    Doily('function(document) { var key = "key"; document[key]; }').call('key' => 'value').should == 'value'
   end
 
   should 'handle hash assignment' do
@@ -124,5 +128,13 @@ class DoilyTest < Test::Unit::TestCase
       Doily('function() { for (var i=0; i < 3; i++) { tick(); } }').delegate(@counter).call
       @counter.count.should == 3
     end
+  end
+
+  should 'special-case property access for length (no parens necessary to call)' do
+    Doily('function() { "foo".length; }').call.should == 3
+  end
+
+  should 'index arrays' do
+    Doily('function(array) { array[0]; }').call(['a', 'b']).should == 'a'
   end
 end
