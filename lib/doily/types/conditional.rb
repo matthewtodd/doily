@@ -1,9 +1,9 @@
 module Doily
   class Conditional
-    def initialize(conditional, true_expressions, false_expressions=[])
+    def initialize(conditional, true_block, false_block = Block.new)
       @conditional = conditional
-      @true_block  = Block.new(true_expressions)
-      @false_block = Block.new(false_expressions)
+      @true_block  = true_block
+      @false_block = false_block
     end
 
     def to_ruby(binding)

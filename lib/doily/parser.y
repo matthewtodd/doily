@@ -8,13 +8,17 @@ rule
     ;
 
   function_definition
-    : FUNCTION '(' argument_name_list ')' '{' expression_list '}' { result = Function.new(val[2], val[5]) }
+    : FUNCTION '(' argument_name_list ')' block { result = Function.new(val[2], val[4]) }
     ;
 
   argument_name_list
     :                                   { result = [] }
     | IDENTIFIER                        { result = [val[0]] }
     | IDENTIFIER ',' argument_name_list { result = [val[0]] + val[2] }
+    ;
+
+  block
+    : '{' expression_list '}' { result = Block.new(val[1]) }
     ;
 
   expression_list
@@ -75,8 +79,8 @@ rule
     ;
 
   if_expression
-    : IF '(' expression ')' '{' expression_list '}'                              { result = Conditional.new(val[2], val[5]) }
-    | IF '(' expression ')' '{' expression_list '}' ELSE '{' expression_list '}' { result = Conditional.new(val[2], val[5], val[9]) }
+    : IF '(' expression ')' block            { result = Conditional.new(val[2], val[4]) }
+    | IF '(' expression ')' block ELSE block { result = Conditional.new(val[2], val[4], val[6]) }
     ;
 
 ---- header ----

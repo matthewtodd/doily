@@ -1,6 +1,6 @@
 module Doily
   class Block
-    def initialize(expressions)
+    def initialize(expressions = [])
       @expressions = expressions
     end
 

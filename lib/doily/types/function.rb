@@ -1,8 +1,8 @@
 module Doily
   class Function
-    def initialize(parameters, expressions)
+    def initialize(parameters, block)
       @parameters = parameters
-      @block      = Block.new(expressions)
+      @block      = block
     end
 
     def bind(binding)
