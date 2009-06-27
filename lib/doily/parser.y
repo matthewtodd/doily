@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IF ELSE VAR BOOLEAN_LITERAL IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
+  token FUNCTION IF ELSE FOR VAR BOOLEAN_LITERAL IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
 
 rule
   target
@@ -29,7 +29,17 @@ rule
 
   statement
     : if_statement
+    | for_loop
     | expression ';'
+    ;
+
+  if_statement
+    : IF '(' expression ')' block            { result = Conditional.new(val[2], val[4]) }
+    | IF '(' expression ')' block ELSE block { result = Conditional.new(val[2], val[4], val[6]) }
+    ;
+
+  for_loop
+    : FOR '(' expression ';' expression ';' expression ')' block { result = Loop.new(val[2], val[4], val[6], val[8]) }
     ;
 
   expression
@@ -91,11 +101,6 @@ rule
     : variable '++' { result = Assignment.new(val[0], Call.new(Access.new(val[0], '+'), [Literal.new(1)])) }
     ;
 
-  if_statement
-    : IF '(' expression ')' block            { result = Conditional.new(val[2], val[4]) }
-    | IF '(' expression ')' block ELSE block { result = Conditional.new(val[2], val[4], val[6]) }
-    ;
-
 ---- header ----
 require 'strscan'
 ---- inner ----
@@ -118,6 +123,8 @@ require 'strscan'
         @tokens.push [:IF, m]
       when m = scanner.scan(/else/)
         @tokens.push [:ELSE, m]
+      when m = scanner.scan(/for/)
+        @tokens.push [:FOR, m]
       when m = scanner.scan(/var/)
         @tokens.push [:VAR, m]
       when m = scanner.scan(/true|false/)

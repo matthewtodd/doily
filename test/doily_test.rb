@@ -104,4 +104,25 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle increment operator' do
     Doily('function() { var i = 0; i++; i; }').call.should == 1
   end
+
+  context 'for loop' do
+    setup do
+      @counter = Class.new do
+        attr_reader :count
+
+        def initialize
+          @count = 0
+        end
+
+        def tick
+          @count = @count + 1
+        end
+      end.new
+    end
+
+    should 'work' do
+      Doily('function() { for (var i=0; i < 3; i++) { tick(); } }').delegate(@counter).call
+      @counter.count.should == 3
+    end
+  end
 end
