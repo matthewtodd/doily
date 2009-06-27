@@ -23,16 +23,11 @@ rule
     ;
 
   statement_list
-    : single_statement                 { result = [val[0]] }
-    | leading_statement statement_list { result = [val[0]] + val[1] }
+    : statement                { result = [val[0]] }
+    | statement statement_list { result = [val[0]] + val[1] }
     ;
 
-  single_statement
-    : if_statement
-    | expression
-    ;
-
-  leading_statement
+  statement
     : if_statement
     | expression ';'
     ;
