@@ -1,0 +1,2 @@
+* http://github.com/jbarnette/johnson - ruby wrapper for SpiderMonkey
+* http://github.com/jcoglan/siren - JSON parser / query language
