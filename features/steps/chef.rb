@@ -1,31 +1,15 @@
 Given /^these documents$/ do |table|
-  table.raw[0].each { |column| table.map_column!(column) { |value| eval(value) }}
+  evaluate_table_values(table)
   @documents = table.hashes
 end
 
-class SimpleEmitter
-  def initialize
-    @results = []
+When /^I get the '(.+)' view for '(.+)'$/ do |name, klass|
+  @results = CouchDBView.perform do |couch_db_view|
+    @documents.each { |document| Doily(chef_view(klass, name)).delegate(couch_db_view).call(document) }
   end
-
-  def emit(key, value)
-    @results.push('key' => key, 'value' => value)
-  end
-
-  def results
-    @results
-  end
-end
-
-When /^I get the '(.+)' view for '(.+)'$/ do |view, klass|
-  view     = Chef.const_get(klass)::DESIGN_DOCUMENT['views'][view]
-  emitter  = SimpleEmitter.new
-  function = Doily(view['map']).delegate(emitter)
-  @documents.each { |document| function.call(document) }
-  @results = emitter.results
 end
 
 Then /^I should see$/ do |table|
-  table.raw[0].each { |column| table.map_column!(column) { |value| eval(value) }}
+  evaluate_table_values(table)
   @results.should == table.hashes
 end
