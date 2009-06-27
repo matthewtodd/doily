@@ -100,4 +100,8 @@ class DoilyTest < Test::Unit::TestCase
   should 'handle single-quoted strings' do
     Doily("function() { 'foo'; }").call.should == 'foo'
   end
+
+  should 'handle increment operator' do
+    Doily('function() { var i = 0; i++; i; }').call.should == 1
+  end
 end

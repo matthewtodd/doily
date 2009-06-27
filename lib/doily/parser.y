@@ -37,10 +37,11 @@ rule
     | declaration
     | assignment
     | binary_expression
+    | increment
     ;
 
   reference
-    : IDENTIFIER                       { result = Reference.new(val[0]) }
+    : variable
     | INTEGER_LITERAL                  { result = Literal.new(val[0].to_i) }
     | BOOLEAN_LITERAL                  { result = Literal.new(eval(val[0])) }
     | string_literal
@@ -48,6 +49,10 @@ rule
     | reference '.' IDENTIFIER         { result = Access.new(val[0], val[2]) }
     | reference '[' STRING_LITERAL ']' { result = Access.new(val[0], eval(val[2])) }
     | reference '(' argument_list ')'  { result = Call.new(val[0], val[2]) }
+    ;
+
+  variable
+    : IDENTIFIER { result = Reference.new(val[0]) }
     ;
 
   string_literal
@@ -80,6 +85,10 @@ rule
 
   binary_expression
     : reference BINARY_OPERATOR reference { result = Call.new(Access.new(val[0], val[1]), [val[2]]) }
+    ;
+
+  increment
+    : variable '++' { result = Assignment.new(val[0], Call.new(Access.new(val[0], '+'), [Literal.new(1)])) }
     ;
 
   if_statement
@@ -115,6 +124,8 @@ require 'strscan'
         @tokens.push [:BOOLEAN_LITERAL, m]
       when m = scanner.scan(/==|</)
         @tokens.push [:BINARY_OPERATOR, m]
+      when m = scanner.scan(/\+\+/)
+        @tokens.push [m, m]
       when m = scanner.scan(/[(){}\[\],\.:;=]/)
         @tokens.push [m, m]
       when m = scanner.scan(/[a-zA-Z_]+/)
