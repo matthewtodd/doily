@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class DoilyTest < Test::Unit::TestCase
+class DoilyFunctionTest < Test::Unit::TestCase
   should 'handle nothing' do
     Doily('function() {}').call.should == nil
   end

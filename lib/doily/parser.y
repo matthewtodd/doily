@@ -5,6 +5,7 @@ class Doily::Parser
 rule
   target
     : function_definition
+    | '{' key_value_list '}' { result = Object.new(val[1]).to_ruby(nil) }
     ;
 
   function_definition
@@ -56,6 +57,7 @@ rule
     | BOOLEAN_LITERAL                  { result = Literal.new(eval(val[0])) }
     | string_literal
     | '{' key_value_list '}'           { result = Object.new(val[1]) }
+    | '[' reference_list ']'           { result = Array.new(val[1]) }
     | reference '.' IDENTIFIER         { result = Access.new(val[0], Literal.new(val[2])) }
     | reference '[' reference ']'      { result = Access.new(val[0], val[2]) }
     | reference '(' argument_list ')'  { result = Call.new(val[0], val[2]) }
@@ -77,6 +79,12 @@ rule
 
   key_value
     : string_literal ':' reference { result = { val[0] => val[2] }}
+    ;
+
+  reference_list
+    :                              { result = []}
+    | reference                    { result = [val[0]]}
+    | reference ',' reference_list { result = [val[0]] + val[2]}
     ;
 
   argument_list
@@ -105,7 +113,7 @@ rule
 require 'strscan'
 ---- inner ----
 
-  def self.function(string)
+  def self.parse(string)
     new.parse(string)
   end
 
