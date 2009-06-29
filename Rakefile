@@ -5,7 +5,7 @@ require 'cucumber/rake/task'
 
 spec = Gem::Specification.new do |s|
   s.name             = 'doily'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'A Javascript (function) interpreter for Ruby.'
   s.files            = FileList['Rakefile', '*.rdoc', 'features/**/*', 'lib/**/*', 'test/**/*'].to_a
   s.rdoc_options     = %W[--main README.rdoc --title #{s.name}-#{s.version} --inline-source --line-numbers --all]
