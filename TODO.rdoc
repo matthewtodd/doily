@@ -1,0 +1,1 @@
+* BUG: hash['type'] ends up calling hash.type
