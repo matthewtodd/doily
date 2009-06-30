@@ -11,10 +11,18 @@ Feature: Chef Nodes
       | 'node'                | 'thulucandra'       | { 'fqdn' => 'thulucandra.example.com' } | nil               |
       | 'openid_registration' | 'glarb_example_com' | 'do not matter'                         | 'does not matter' |
 
+  Scenario: Parsing the Node Design Document
+    When I parse the design document for 'Node'
+    Then I should see
+      | key        |
+      | 'language' |
+      | 'version'  |
+      | 'views'    |
+
   Scenario: Coverage
     When I list all the views for 'Node'
     Then I should see
-      | name          |
+      | key           |
       | 'all'         |
       | 'all_id'      |
       | 'by_run_list' |

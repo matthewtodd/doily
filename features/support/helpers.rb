@@ -14,8 +14,12 @@ class CouchDBView
   end
 end
 
+def chef_design_document(klass)
+  Chef.const_get(klass)::DESIGN_DOCUMENT
+end
+
 def chef_view_functions(klass)
-  Chef.const_get(klass)::DESIGN_DOCUMENT.fetch('views')
+  chef_design_document(klass).fetch('views')
 end
 
 def chef_view(klass, name)
@@ -24,4 +28,10 @@ end
 
 def evaluate_table_values(table)
   table.raw[0].each { |column| table.map_column!(column) { |value| eval(value) }}
+end
+
+def sorted_keys(hash)
+  results = []
+  hash.keys.sort.each { |key| results.push('key' => key)}
+  results
 end

@@ -3,9 +3,12 @@ Given /^these documents$/ do |table|
   @documents = table.hashes
 end
 
+When /^I parse the design document for '(.+)'$/ do |klass|
+  @results = sorted_keys(Doily(chef_design_document(klass).to_json))
+end
+
 When /^I list all the views for '(.+)'$/ do |klass|
-  @results = []
-  chef_view_functions(klass).keys.sort.each { |key| @results.push('name' => key)}
+  @results = sorted_keys(chef_view_functions(klass))
 end
 
 When /^I get the '(.+)' view for '(.+)'$/ do |name, klass|

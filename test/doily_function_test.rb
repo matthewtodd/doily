@@ -101,6 +101,25 @@ class DoilyFunctionTest < Test::Unit::TestCase
     Doily('function() { false; }').call.should == false
   end
 
+  context 'escape sequences' do
+    context 'ruby' do
+      should 'require escaping backslashes in a single-quoted string' do
+        string = '\\"'
+        string.length.should == 2
+        string[0..0].should == '\\'
+        string[1..1].should == '"'
+      end
+    end
+
+    should 'handle escape sequences in single-quoted strings' do
+      Doily('function() { \'\\\'\'; }').call.should == '\''
+    end
+
+    should 'handle escape sequences in double-quoted strings' do
+      Doily('function() { "\\""; }').call.should == '"'
+    end
+  end
+
   should 'handle single-quoted strings' do
     Doily("function() { 'foo'; }").call.should == 'foo'
   end

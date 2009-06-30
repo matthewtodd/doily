@@ -10,10 +10,18 @@ Feature: Chef OpenID Registrations
       | 'openid_registration' | 'validated_org'   | true              |
       | 'role'                | 'foo'             | 'does not matter' |
 
+  Scenario: Parsing the OpenIDRegistration Design Document
+    When I parse the design document for 'OpenIDRegistration'
+    Then I should see
+      | key        |
+      | 'language' |
+      | 'version'  |
+      | 'views'    |
+
   Scenario: Coverage
     When I list all the views for 'OpenIDRegistration'
     Then I should see
-      | name          |
+      | key           |
       | 'all'         |
       | 'all_id'      |
       | 'unvalidated' |
