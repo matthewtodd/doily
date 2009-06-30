@@ -1,1 +1,2 @@
 * BUG: hash['type'] ends up calling hash.type
+* http://intertwingly.net/blog/2009/06/29/ECMAScript-5-Test-Suites
