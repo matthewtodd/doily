@@ -150,9 +150,9 @@ require 'strscan'
         @tokens.push [:STRING_LITERAL, m]
       when m = scanner.scan(/'(?:\\.|[^'])*'/)
         @tokens.push [:STRING_LITERAL, m]
-      when m = scanner.scan(/\d+\.\d+/)
+      when m = scanner.scan(/(?:-)?\d+\.\d+/)
         @tokens.push [:FLOATING_POINT_LITERAL, m]
-      when m = scanner.scan(/\d+/)
+      when m = scanner.scan(/(?:-)?\d+/)
         @tokens.push [:INTEGER_LITERAL, m]
       else
         raise ParseError.new(scanner)

@@ -105,6 +105,14 @@ class DoilyTest < Test::Unit::TestCase
     Doily('function() { 1.2; }').call.should == 1.2
   end
 
+  should 'handle negative integer literals' do
+    Doily('function() { -1; }').call.should == -1
+  end
+
+  should 'handle negative floating-point literals' do
+    Doily('function() { -1.2; }').call.should == -1.2
+  end
+
   context 'escape sequences' do
     context 'ruby' do
       should 'require escaping backslashes in a single-quoted string' do
