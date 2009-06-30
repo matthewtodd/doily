@@ -1,6 +1,6 @@
 class Doily::Parser
 
-  token FUNCTION IF ELSE FOR VAR BOOLEAN_LITERAL IDENTIFIER STRING_LITERAL INTEGER_LITERAL BINARY_OPERATOR
+  token FUNCTION IF ELSE FOR VAR BOOLEAN_LITERAL IDENTIFIER STRING_LITERAL FLOATING_POINT_LITERAL INTEGER_LITERAL BINARY_OPERATOR
 
 rule
   target
@@ -53,6 +53,7 @@ rule
 
   reference
     : variable
+    | FLOATING_POINT_LITERAL           { result = Literal.new(val[0].to_f) }
     | INTEGER_LITERAL                  { result = Literal.new(val[0].to_i) }
     | BOOLEAN_LITERAL                  { result = Literal.new(eval(val[0])) }
     | string_literal
@@ -149,6 +150,8 @@ require 'strscan'
         @tokens.push [:STRING_LITERAL, m]
       when m = scanner.scan(/'(?:\\.|[^'])*'/)
         @tokens.push [:STRING_LITERAL, m]
+      when m = scanner.scan(/\d+\.\d+/)
+        @tokens.push [:FLOATING_POINT_LITERAL, m]
       when m = scanner.scan(/\d+/)
         @tokens.push [:INTEGER_LITERAL, m]
       else

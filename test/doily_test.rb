@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class DoilyFunctionTest < Test::Unit::TestCase
+class DoilyTest < Test::Unit::TestCase
   should 'handle nothing' do
     Doily('function() {}').call.should == nil
   end
@@ -99,6 +99,10 @@ class DoilyFunctionTest < Test::Unit::TestCase
 
   should 'handle literal false' do
     Doily('function() { false; }').call.should == false
+  end
+
+  should 'handle floating-point literals' do
+    Doily('function() { 1.2; }').call.should == 1.2
   end
 
   context 'escape sequences' do
