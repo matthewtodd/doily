@@ -4,16 +4,14 @@ A Javascript (function) interpreter for Ruby.
 
 == Examples
 
- Doily was basically designed to support CouchDB views. So, you can do stuff like this:
+Doily was basically designed to support CouchDB views. So, you can do stuff like this:
 
  class CouchDBView
    def map(function, documents)
      function = Doily(function).delegate(self)
 
      @results = []
-     documents.each do |document|
-       function.call(document)
-     end
+     documents.each { |doc| function.call(doc) }
      @results
    end
 
