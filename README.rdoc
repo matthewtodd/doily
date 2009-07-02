@@ -4,13 +4,33 @@ A Javascript (function) interpreter for Ruby.
 
 == Examples
 
- Doily('function(string) { string.length; }').call('foo') # => 3
+ Doily was basically designed to support CouchDB views. So, you can do stuff like this:
 
- function = Doily('function(doc) { if (doc.type == "node") { emit(doc.name, doc); } }')
- function = function.delegate(couch_db_view) # assuming couch_db_view responds to :emit
- documents.each do |document|
-   function.call(document)
+ class CouchDBView
+   def map(function, documents)
+     function = Doily(function).delegate(self)
+
+     @results = []
+     documents.each do |document|
+       function.call(document)
+     end
+     @results
+   end
+
+   def emit(key, value)
+     @results.push(:key => key, :value => value)
+   end
  end
+
+ map_function = <<-END
+   function(doc) {
+     if (doc.chef_type == 'node') {
+       emit(doc.name, doc);
+     }
+   }
+ END
+
+ CouchDBView.new.map(map_function, Document.all)
 
 == Install
 
